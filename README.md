@@ -15,7 +15,7 @@ The application is built on Laravel 11, using:
 
 Laravel Breeze for authentication scaffolding
 Inertia.js and Vue 3 for the frontend
-SQLite database (configurable to use MySQL, PostgreSQL, etc.)
+SQLite database 
 
 Models
 The system is built around several key models:
