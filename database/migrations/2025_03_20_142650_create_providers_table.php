@@ -6,23 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('insurers', function (Blueprint $table) {
+        Schema::create('providers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('code')->unique();
             $table->string('email')->nullable();
-            $table->integer('daily_capacity')->default(100);
-            $table->integer('min_batch_size')->default(5);
-            $table->integer('max_batch_size')->default(50);
-            $table->boolean('prefers_encounter_date')->default(true);
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('insurers');
+        Schema::dropIfExists('providers');
     }
-}; 
+};

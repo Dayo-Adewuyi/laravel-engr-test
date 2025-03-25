@@ -6,61 +6,49 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Claim extends Model
+class Batch extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'provider_id',
         'insurer_id',
-        'specialty_id',
-        'batch_id',
-        'encounter_date',
-        'submission_date',
-        'priority_level',
+        'batch_date',
+        'batch_identifier',
+        'total_claims',
         'total_amount',
+        'processing_cost',
         'processed',
+        'processing_date',
     ];
 
     protected $casts = [
-        'encounter_date' => 'date',
-        'submission_date' => 'date',
-        'priority_level' => 'integer',
+        'batch_date' => 'date',
+        'total_claims' => 'integer',
         'total_amount' => 'decimal:2',
+        'processing_cost' => 'decimal:2',
         'processed' => 'boolean',
+        'processing_date' => 'date',
     ];
 
-  
+   
     public function provider(): BelongsTo
     {
         return $this->belongsTo(Provider::class);
     }
 
-   
+ 
     public function insurer(): BelongsTo
     {
         return $this->belongsTo(Insurer::class);
     }
 
   
-    public function specialty(): BelongsTo
+    public function claims(): HasMany
     {
-        return $this->belongsTo(Specialty::class);
+        return $this->hasMany(Claim::class);
     }
 
    
-    public function batch(): BelongsTo
-    {
-        return $this->belongsTo(Batch::class);
-    }
-
-  
-    public function items(): HasMany
-    {
-        return $this->hasMany(ClaimItem::class);
-    }
-
-  
 }
