@@ -1,98 +1,123 @@
-Claims Processing System
-Overview
-This project is a healthcare claims processing system designed to efficiently manage the submission, batching, and processing of medical claims between healthcare providers and insurance companies. It streamlines the workflow from claim submission to batch processing, with intelligent batching optimization to minimize processing costs.
-Key Features
+# 🏥 Claims Processing System
 
-User Authentication & Authorization: Role-based access control for providers and administrators
-Claim Submission: Submit medical claims with line items, specialties, and priority levels
-Smart Batching Algorithm: Automatically groups claims into batches based on multiple factors
-Batch Optimization: Rebalances batches to minimize processing costs before submission
-Processing Scheduling: Manages insurer daily capacity and schedules batch processing accordingly
-Notifications: Email notifications to insurers when new batches are created
+## 📘 Overview
+This project is a healthcare claims processing system designed to efficiently manage the **submission**, **batching**, and **processing** of medical claims between healthcare providers and insurance companies. It streamlines the workflow from claim submission to intelligent batch optimization in order to **minimize processing costs**.
 
-System Architecture
-The application is built on Laravel 11, using:
+---
 
-Laravel Breeze for authentication scaffolding
-Inertia.js and Vue 3 for the frontend
-SQLite database 
+## ✨ Key Features
 
-Models
-The system is built around several key models:
+- **User Authentication & Authorization**  
+  Role-based access control for providers and administrators
 
-User: Healthcare provider staff members or administrators
-Provider: Healthcare organizations submitting claims
-Insurer: Insurance companies receiving claims
-Specialty: Medical specialties (e.g., Cardiology, Orthopedics)
-Claim: Individual claim submissions with metadata
-ClaimItem: Line items within a claim
-Batch: Groups of claims for processing
+- **Claim Submission**  
+  Submit medical claims with line items, specialties, and priority levels
 
-Batching Algorithm
-The intelligent batching system is the core feature of this application, designed to optimize claim processing efficiency.
-Algorithm Overview
+- **Smart Batching Algorithm**  
+  Automatically groups claims into batches based on multiple factors
 
-Batch Assignment
+- **Batch Optimization**  
+  Rebalances batches to minimize processing costs before submission
 
-Claims are assigned to batches based on provider, insurer, and date
-Each insurer has configurable batch size limits (min, max)
-The system respects insurer preferences for batching by encounter date or submission date
+- **Processing Scheduling**  
+  Manages insurer daily capacity and schedules batch processing accordingly
 
+- **Notifications**  
+  Email notifications to insurers when new batches are created
 
-Cost Calculation
+---
 
-Each batch has a processing cost calculated using several weighted factors:
+## 🏗️ System Architecture
 
-Time of month factor (claims later in the month cost more to process)
-Specialty efficiency factors (specific insurers handle certain specialties more efficiently)
-Priority factors (higher priority claims cost more to process)
-Monetary value factors (higher value claims cost more to process)
-Batch size optimization factors (batches closest to optimal size are most cost-effective)
+The application is built on **Laravel 11**, using:
 
+- [Laravel Breeze](https://laravel.com/docs/starter-kits#laravel-breeze) for authentication scaffolding  
+- [Inertia.js](https://inertiajs.com/) and **Vue 3** for the frontend  
+- **SQLite** database (for development)
 
+---
 
+## 🧩 Core Models
 
-Batch Optimization
+| Model        | Description                                      |
+|--------------|--------------------------------------------------|
+| `User`       | Healthcare provider staff or administrators      |
+| `Provider`   | Healthcare organizations submitting claims       |
+| `Insurer`    | Insurance companies receiving claims             |
+| `Specialty`  | Medical specialties (e.g., Cardiology, Ortho)    |
+| `Claim`      | Individual claim submissions with metadata       |
+| `ClaimItem`  | Line items within a claim                        |
+| `Batch`      | Groups of claims for processing                  |
 
-The system can rebalance batches before processing to minimize costs:
+---
 
-Small batches are merged when possible
-Large batches are split when they exceed maximum size
-Claims are redistributed to achieve optimal batch sizes
+## 🧠 Batching Algorithm
 
+The **intelligent batching system** is the core feature of the application, designed to optimize processing efficiency and cost.
 
+### 🔄 Batch Assignment
 
+- Claims are grouped by **provider**, **insurer**, and **date**
+- Each insurer has configurable **min/max batch size limits**
+- Batches respect insurer preferences for grouping by:
+  - Encounter date  
+  - Submission date
 
-Processing Scheduling
+---
 
-Respects insurer daily processing capacity limits
-Automatically schedules overflow for future days
-Maintains FIFO (first-in-first-out) processing order
+### 💰 Cost Calculation Factors
 
+Each batch’s **processing cost** is calculated using:
 
+- **Time of month** – late-month claims are more costly
+- **Specialty efficiency** – some insurers process certain specialties more efficiently
+- **Priority level** – higher priority claims are costlier
+- **Monetary value** – higher value = higher cost
+- **Batch size optimization** – closer to optimal size = cheaper
 
-Algorithm Implementation Details
-The batching algorithm takes the following approach:
-phpCopy// When a new claim is created:
-1. Find an existing open batch for the provider/insurer/date combination
-2. If no batch exists, create a new one
-3. Add the claim to the batch
-4. Update the batch totals and recalculate processing cost
-5. If the batch exceeds maximum size, create a new batch for future claims
+---
 
-// When calculating processing cost:
-1. Consider time of month (claims later in month cost more)
-2. Apply insurer-specialty efficiency factors
-3. Apply claim priority multipliers
-4. Apply monetary value scaling
-5. Apply batch size optimization factors
+### 🔧 Batch Optimization
 
-// When optimizing batches:
-1. Identify batches that are too small or too large
-2. Attempt to merge small batches or move claims to achieve optimal sizing
-3. Split oversized batches when necessary
-4. Recalculate costs after rebalancing
-The algorithm uses database transactions to ensure data consistency during batch operations, with error handling and logging for debugging purposes.
+Before processing, the system:
+
+- **Merges** small batches
+- **Splits** large batches
+- **Redistributes** claims for cost-effective batch sizing
+
+---
+
+### ⏳ Processing Scheduling
+
+- Respects insurer **daily processing capacity**
+- Automatically schedules **overflow** to future days
+- Maintains **FIFO** (First-In-First-Out) order
+
+---
+
+## 🔍 Algorithm Implementation Details
+
+```php
+// When a new claim is created:
+1. Find existing open batch by provider/insurer/date
+2. If none, create a new batch
+3. Add the claim to batch
+4. Update batch totals and recalculate cost
+5. If batch exceeds max size, create a new one
+
+// Cost Calculation:
+1. Apply time-of-month multiplier
+2. Factor in specialty efficiency
+3. Apply claim priority multiplier
+4. Scale cost by monetary value
+5. Optimize based on batch size
+
+// Batch Optimization:
+1. Identify under/oversized batches
+2. Merge small batches or reassign claims
+3. Split large batches if needed
+4. Recalculate cost after adjustment
+```
 Setup
 
 Clone the repository
